@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { FormComplete } from "./form-complete";
+import { FormComplete } from "@/registry/new-york/blocks/form-complete/form-complete";
 import { Toaster } from "@/registry/new-york/ui/sonner"; // Ensure this path is correct
 
 // Simulate a delay for API calls
