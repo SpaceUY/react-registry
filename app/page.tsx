@@ -49,6 +49,20 @@ export default function Home() {
 				>
 					<FormCompletePage />
 				</ExampleSection>
+
+				<ExampleSection
+					title="TBD: Table with pagination, sort, filter, etc."
+					name="form-complete"
+				>
+					<div>TBD</div>
+				</ExampleSection>
+
+				<ExampleSection
+					title="TBD: Card drawer with card, img, title, and action buttons."
+					name="form-complete"
+				>
+					<div>TBD</div>
+				</ExampleSection>
 			</main>
 		</div>
 	);
