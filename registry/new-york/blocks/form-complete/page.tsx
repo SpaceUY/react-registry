@@ -38,7 +38,7 @@ export default function FormCompletePage() {
 					email: "test@example.com",
 				}}
 			/>
-			<Toaster richColors position="top-right" />
+			{/* <Toaster richColors position="top-right" /> */}
 		</div>
 	);
 }
