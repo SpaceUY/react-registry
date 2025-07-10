@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-	title: "Tatulino Registry",
+	title: "React UI Registry",
 	description: "A registry for distributing code using shadcn.",
 };
 

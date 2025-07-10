@@ -1,7 +1,7 @@
 {
   "$schema": "https://ui.shadcn.com/schema/registry.json",
-  "name": "tatulino",
-  "homepage": "https://registry.tatulino.com",
+  "name": "React UI Registry",
+  "homepage": "https://spaceuy.github.io/react-registry",
   "items": [
     {
       "name": "hello-world",

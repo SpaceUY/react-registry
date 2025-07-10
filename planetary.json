@@ -1,0 +1,61 @@
+{
+  "modules": {
+    "hello-world": {
+      "path": "registry/new-york/blocks/hello-world",
+      "implementations": [
+        {
+          "name": "basic-hello-world",
+          "description": "A simple hello world component",
+          "dependencies": []
+        }
+      ]
+    },
+    "example-form": {
+      "path": "registry/new-york/blocks/example-form",
+      "implementations": [
+        {
+          "name": "contact-form",
+          "description": "A contact form with Zod validation",
+          "dependencies": ["zod"]
+        }
+      ]
+    },
+    "complex-component": {
+      "path": "registry/new-york/blocks/complex-component",
+      "implementations": [
+        {
+          "name": "pokemon-showcase",
+          "description": "A complex component showing hooks, libs and components with Pokemon data",
+          "dependencies": []
+        }
+      ]
+    },
+    "example-with-css": {
+      "path": "registry/new-york/blocks/example-with-css",
+      "implementations": [
+        {
+          "name": "styled-login-form",
+          "description": "A login form with a CSS file",
+          "dependencies": []
+        }
+      ]
+    },
+    "form-complete": {
+      "path": "registry/new-york/blocks/form-complete",
+      "implementations": [
+        {
+          "name": "comprehensive-form",
+          "description": "A comprehensive form with various input types, react-hook-form, Zod validation, and toast notifications",
+          "dependencies": [
+            "zod",
+            "react-hook-form",
+            "@hookform/resolvers",
+            "date-fns",
+            "lucide-react",
+            "sonner"
+          ]
+        }
+      ]
+    }
+  }
+}

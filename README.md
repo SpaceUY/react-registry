@@ -5,7 +5,11 @@ component registry allows you to distribute your custom components, hooks, pages
 other files to any React project.
 
 > [!IMPORTANT]  
-> This template uses Tailwind v4. For Tailwind v3, see [registry-template](https://github.com/shadcn-ui/registry-template).
+> To install any component run the following command
+
+```zsh
+npx shadcn@latest add https://spaceuy.github.io/react-registry/r/hello-world.json
+```
 
 ## Getting Started
 
