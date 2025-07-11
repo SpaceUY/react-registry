@@ -1,5 +1,15 @@
 {
   "modules": {
+    "state-management": {
+      "path": "planetary/state-management",
+      "implementations": [
+        {
+          "name": "zustand",
+          "description": "Lightweight state management with Zustand",
+          "dependencies": ["zustand"]
+        }
+      ]
+    },
     "hello-world": {
       "path": "registry/new-york/blocks/hello-world",
       "implementations": [
