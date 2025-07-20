@@ -34,19 +34,15 @@ Reusable UI components and error boundaries:
 - **`theme-provider.tsx`** - Theme context provider (dark/light/system)
 - **`theme-toggle.tsx`** - Theme switching component (commented - requires UI library)
 
-### Constants (`@/src/common/constants/`)
+### Lib (`@/src/common/lib/`)
 
-Application-wide constants and enums:
+External library integrations, utilities, and services:
 
-- **`quest-ids.ts`** - Quest identifier constants
-  - `USER_SIGNUP` - User signup quest identifier
-
-### Helpers (`@/src/common/helpers/`)
-
-Utility helper functions:
-
-- **`wallet.helpers.ts`** - Wallet-related utilities
-  - `parseWalletAddress()` - Formats wallet addresses for display
+- **`utils.ts`** - General utility functions
+  - `cn()` - Class name merging utility (clsx + tailwind-merge)
+  - `urlB64ToUint8Array()` - Base64 to Uint8Array conversion
+- **`services/`** - API and external service integrations
+  - `query.interceptor.ts` - HTTP interceptor (commented - requires setup)
 
 ### Hooks (`@/src/common/hooks/`)
 
@@ -62,21 +58,6 @@ Layout components for different page types:
 - **`auth-layout.tsx`** - Layout for authenticated pages
   - Includes sidebar space, auth validations, and guards
 - **`layout.tsx`** - Layout for non-authenticated pages (landing, signup)
-
-### Lib (`@/src/common/lib/`)
-
-External library integrations and utilities:
-
-- **`utils.ts`** - General utility functions
-  - `cn()` - Class name merging utility (clsx + tailwind-merge)
-  - `urlB64ToUint8Array()` - Base64 to Uint8Array conversion
-
-### Services (`@/src/common/services/`)
-
-API and external service integrations:
-
-- **`interceptor/`** - HTTP request interceptors
-  - `query.interceptor.ts` - RTK Query interceptor (commented - requires setup)
 
 ### Stores (`@/src/common/stores/`)
 
@@ -96,12 +77,18 @@ TypeScript type definitions:
 
 Utility functions and helpers:
 
-- **`api-error.utils.ts`** - API error handling utilities
+- **`api-error.ts`** - API error handling utilities
   - `ApiError` interface and `isApiError()` type guard
-- **`date.utils.ts`** - Date formatting utilities
+- **`constants.ts`** - Application-wide constants and enums
+  - `QUEST_IDS` - Quest identifier constants including `USER_SIGNUP`
+- **`date.ts`** - Date formatting utilities
   - `formatDate()` - Formats dates for display
-- **`logger.utils.ts`** - Logging utility with PostHog integration
+- **`debounce.ts`** - Debounce utility function
+  - `debounce()` - Creates debounced function with cancel capability
+- **`logger.ts`** - Logging utility with PostHog integration
   - `Logger` class with debug, info, warn, error methods
+- **`wallet.ts`** - Wallet-related utilities
+  - `parseWalletAddress()` - Formats wallet addresses for display
 
 ### Views (`@/src/common/views/`)
 
@@ -150,7 +137,7 @@ Main application routing with error handling and scroll restoration:
 
 - **Components**: PascalCase (e.g., `ThemeProvider.tsx`)
 - **Hooks**: camelCase with `use` prefix (e.g., `useMobile.tsx`)
-- **Utilities**: camelCase (e.g., `apiError.utils.ts`)
+- **Utilities**: camelCase (e.g., `api-error.ts`, `wallet.ts`, `debounce.ts`)
 - **Types**: camelCase (e.g., `routes.ts`)
 - **Constants**: UPPER_SNAKE_CASE in files (e.g., `QUEST_IDS`)
 

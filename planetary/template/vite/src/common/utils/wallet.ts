@@ -1,4 +1,4 @@
-import { logger } from "../utils/logger.utils";
+import { logger } from "./logger";
 
 /**
  * Parses wallet address by extracting the actual address part
