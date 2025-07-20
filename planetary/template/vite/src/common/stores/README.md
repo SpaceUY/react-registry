@@ -1,0 +1,1 @@
+Zustand, Redux or other state management libraries
