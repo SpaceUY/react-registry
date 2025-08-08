@@ -2,6 +2,7 @@
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/registry/new-york/ui/button";
+import { envVars } from "@/utils/environment";
 import { toast } from "sonner";
 
 export function ShadcnCliButton({
@@ -9,7 +10,7 @@ export function ShadcnCliButton({
 	className,
 }: { name: string } & React.ComponentProps<typeof Button>) {
 	const handleCopyCommand = () => {
-		const command = `npx shadcn@latest add ${process.env.NEXT_PUBLIC_BASE_URL}/r/${name}.json`;
+		const command = `npx shadcn@latest add ${envVars.NEXT_PUBLIC_BASE_URL}/r/${name}.json`;
 		navigator.clipboard.writeText(command).then(
 			() => {
 				toast.success("npx command copied to clipboard");

@@ -12,6 +12,7 @@ import {
 import { ClipboardCopy } from "lucide-react";
 import { McpIcon } from "./icons/link-icon";
 import { ModeToggle } from "./theme-mode-toggle";
+import { envVars } from "@/utils/environment";
 
 export function Header() {
 	const nextAppCommand =
@@ -22,7 +23,7 @@ export function Header() {
       "command": "npx",
       "args": ["-y", "shadcn@canary", "registry:mcp"],
       "env": {
-        "REGISTRY_URL": "${process.env.NEXT_PUBLIC_BASE_URL}/r/registry.json"
+        "REGISTRY_URL": "${envVars.NEXT_PUBLIC_BASE_URL}/r/registry.json"
       }
     }
   }

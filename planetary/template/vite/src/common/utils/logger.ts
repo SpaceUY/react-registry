@@ -1,5 +1,5 @@
 // import { PostHog } from "posthog-node";
-import { env } from "../../environment";
+import { envVars } from "./environment";
 
 export enum LogLevel {
   DEBUG = "debug",
@@ -69,7 +69,7 @@ class Logger {
 
     // Only add colors if we're in a TTY (terminal) environment
     const isColorSupported =
-      process.stdout.isTTY && env.NODE_ENV !== "production";
+      process.stdout.isTTY && envVars.NODE_ENV !== "production";
 
     if (isColorSupported) {
       const coloredLevel = `${color}${colors.bright}${levelText}${colors.reset}`;
@@ -102,7 +102,7 @@ class Logger {
     };
 
     // Output colored logs to the console for development
-    if (env.NODE_ENV === "development") {
+    if (envVars.NODE_ENV === "development") {
       console.log(this.formatForConsole(level, message, data));
     }
 
@@ -154,7 +154,7 @@ class Logger {
 
   public debug(message: string, data?: LogData) {
     // You might want to log debug messages only in development
-    if (env.NODE_ENV !== "production") {
+    if (envVars.NODE_ENV !== "production") {
       this.log(LogLevel.DEBUG, message, data);
     }
   }

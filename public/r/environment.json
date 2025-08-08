@@ -1,0 +1,26 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "environment",
+  "type": "registry:block",
+  "title": "Environment Configuration",
+  "author": "Jona630 https://github.com/Jona630",
+  "description": "Set up env vars using zod",
+  "dependencies": [
+    "zod"
+  ],
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "planetary/template/vite/src/common/utils/environment.ts",
+      "content": "import { z } from \"zod\";\n\nconst envSchema = z.object({\n  PORT: z.coerce.number().default(3000),\n  NODE_ENV: z\n    .enum([\"development\", \"production\", \"test\"])\n    .default(\"development\"),\n\n    // Database Configuration\n  DATABASE_URL: z.string().optional(),\n  DATABASE_MAX_CONNECTIONS: z.string().default(\"10\"),\n\n  // PostHog Configuration\n  POSTHOG_API_KEY: z.string(),\n  POSTHOG_HOST: z.string().default(\"https://app.posthog.com\"),\n});\n\nexport const envVars = envSchema.parse(process.env);\n\nexport type EnvVars = z.infer<typeof envSchema>;\n",
+      "type": "registry:file",
+      "target": "src/common/utils/environment.ts"
+    },
+    {
+      "path": "planetary/template/vite/src/env.example",
+      "content": "###### React Basics ######\nNODE_ENV=development\n\n###### PostHog ######\nVITE_APP_POSTHOG_API_KEY=phc_123\nVITE_APP_POSTHOG_HOST=https://us.i.posthog.com\n",
+      "type": "registry:file",
+      "target": ".env.example"
+    }
+  ]
+}

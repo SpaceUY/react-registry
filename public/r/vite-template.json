@@ -1,0 +1,150 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "vite-template",
+  "type": "registry:block",
+  "title": "Vite Template",
+  "author": "Jona630 https://github.com/Jona630",
+  "description": "A template for a Vite project.",
+  "dependencies": [],
+  "registryDependencies": [
+    "https://spaceuy.github.io/react-registry/r/vite-template-docs.json",
+    "https://spaceuy.github.io/react-registry/r/posthog.json",
+    "https://spaceuy.github.io/react-registry/r/zustand.json",
+    "https://spaceuy.github.io/react-registry/r/environment.json",
+    "https://spaceuy.github.io/react-registry/r/logger.json"
+  ],
+  "files": [
+    {
+      "path": "planetary/template/vite/src/main.tsx",
+      "content": "import { PostHogProvider } from \"posthog-js/react\";\nimport { StrictMode } from \"react\";\nimport { createRoot } from \"react-dom/client\";\nimport { envVars } from \"./common/utils/environment\";\n\ncreateRoot(document.getElementById(\"root\")!).render(\n  <StrictMode>\n    <PostHogProvider\n      apiKey={envVars.POSTHOG_API_KEY}\n      options={{\n        api_host: envVars.POSTHOG_HOST,\n        defaults: \"2025-05-24\",\n        capture_exceptions: true,\n        debug: envVars.NODE_ENV === \"development\",\n      }}\n    >\n      <div>Your App Here</div>\n    </PostHogProvider>\n  </StrictMode>\n);\n",
+      "type": "registry:file",
+      "target": "src/main-template.tsx"
+    },
+    {
+      "path": "planetary/template/vite/src/router.tsx",
+      "content": "import React from \"react\";\nimport {\n\tcreateBrowserRouter,\n\tRouteObject,\n\tScrollRestoration,\n} from \"react-router-dom\";\n\nimport homeRoutes from \"./modules/home/router\";\nimport NotFound from \"./common/views/not-found\";\nimport RouteError from \"./common/components/error-boundary/route-error\";\n\n//Add scroll repositioning to all the routes\nconst addscrollRestoration = (routes: RouteObject[]): RouteObject[] => {\n\treturn routes.map((route) => {\n\t\tconst wrappedElement = route.element ? (\n\t\t\t<React.Fragment>\n\t\t\t\t{route.element}\n\t\t\t\t<ScrollRestoration />\n\t\t\t</React.Fragment>\n\t\t) : (\n\t\t\troute.element\n\t\t);\n\n\t\treturn {\n\t\t\t...route,\n\t\t\telement: wrappedElement,\n\t\t};\n\t});\n};\n\n// Add error elements to routes based on their type\nconst addErrorElements = (\n\troutes: RouteObject[],\n\tisAuthRoute: boolean\n): RouteObject[] => {\n\treturn routes.map((route) => ({\n\t\t...route,\n\t\terrorElement: isAuthRoute ? (\n\t\t\t<div>AuthLayoutErrorElement</div>\n\t\t\t// <AuthLayoutErrorElement />\n\t\t) : (\n\t\t\t<div>LoginLayoutErrorElement</div>\n\t\t\t// <LoginLayoutErrorElement />\n\t\t),\n\t}));\n};\n\n//first apply scroll restoration to all routes\nconst authRoutesWithScroll = addscrollRestoration([\n  ...homeRoutes,\n]);\n\n// then, apply to all routes the error elements\nconst authRoutesWithError = addErrorElements(authRoutesWithScroll, true);\n\n// const nonAuthRoutesWithError = addErrorElements([...loginRoutes], false);\n\n// Combine all routes\nconst routes: RouteObject[] = [\n\t...authRoutesWithError,\n\t// ...nonAuthRoutesWithError,\n\t{\n\t\tpath: \"*\",\n\t\telement: <NotFound />,\n\t\terrorElement: <RouteError />,\n\t},\n];\n\nconst router = createBrowserRouter(routes);\n\nexport default router;\n",
+      "type": "registry:file",
+      "target": "src/router.tsx"
+    },
+    {
+      "path": "planetary/template/vite/src/common/components/error-boundary/auth-layout-with-error.tsx",
+      "content": "import AuthLayout from \"../../layouts/auth-layout\";\nimport RouteError from \"./route-error\";\n\n/**\n * Error element that preserves the auth layout\n */\nexport function AuthLayoutErrorElement() {\n  return (\n    <AuthLayout>\n      <RouteError />\n    </AuthLayout>\n  );\n}\n",
+      "type": "registry:file",
+      "target": "src/common/components/error-boundary/auth-layout-with-error.tsx"
+    },
+    {
+      "path": "planetary/template/vite/src/common/components/error-boundary/login-layout-with-error.tsx",
+      "content": "import Layout from \"../../layouts/layout\";\nimport RouteError from \"./route-error\";\n\n/**\n * Error element that preserves the login layout\n */\nexport function LoginLayoutErrorElement() {\n\treturn (\n\t\t<Layout>\n\t\t\t<RouteError />\n\t\t</Layout>\n\t);\n}\n",
+      "type": "registry:file",
+      "target": "src/common/components/error-boundary/login-layout-with-error.tsx"
+    },
+    {
+      "path": "planetary/template/vite/src/common/components/error-boundary/route-error.tsx",
+      "content": "import { isRouteErrorResponse, useRouteError } from \"react-router-dom\";\nimport { envVars } from \"../../utils/environment\";\n\n// mock\nconst getUser = () => {\n  return {\n    id: \"1\",\n    email: \"test@test.com\",\n    username: \"test\",\n    token: \"1234567890\",\n  };\n};\n\nexport default function RouteError() {\n  const error = useRouteError();\n  const user = getUser();\n  const isLoggedIn = user.email !== \"\" && user.token !== \"\";\n  const isDevelopment =\n    envVars.NODE_ENV === \"development\" ||\n    window.location.hostname === \"localhost\";\n\n  // Extract error message\n  let errorMessage = \"An unexpected error occurred\";\n  let errorDetails = \"\";\n\n  if (isRouteErrorResponse(error)) {\n    errorMessage = \"Application Error\";\n    errorDetails = error.statusText || error.data?.message || \"Unknown error\";\n  } else if (error instanceof Error) {\n    errorMessage = \"Something went wrong\";\n    errorDetails = error.message;\n\n    // Log to Sentry or any other provider\n    // Sentry.captureException(error, {\n    //   tags: {\n    //     component: \"RouteError\",\n    //   },\n    //   user: isLoggedIn\n    //     ? {\n    //         id: user.id || undefined,\n    //         email: user.email || undefined,\n    //         username: user.username || undefined,\n    //       }\n    //     : undefined,\n    // });\n  } else if (typeof error === \"string\") {\n    errorMessage = \"Error\";\n    errorDetails = error;\n\n    // Log to Sentry or any other provider\n    // Sentry.captureMessage(error, {\n    //   level: \"error\",\n    //   tags: {\n    //     component: \"RouteError\",\n    //   },\n    // });\n  } else {\n    // Log unknown error to Sentry or any other provider\n    // Sentry.captureMessage(\"Unknown error in RouteError component\", {\n    //   level: \"error\",\n    //   extra: { error },\n    // });\n  }\n\n  return (\n    <div className=\"flex items-center justify-center min-h-[calc(100vh-64px)] p-4\">\n      {/* <Card className=\"w-full max-w-md shadow-lg\">\n        <CardHeader>\n          <CardTitle className=\"text-xl\">{errorMessage}</CardTitle>\n          <CardDescription>\n            We're sorry, but an error occurred while loading this page.\n          </CardDescription>\n        </CardHeader>\n        {!isDevelopment && (\n          <CardContent>\n            <div className=\"p-4 my-2 overflow-auto text-sm bg-muted rounded-md max-h-40\">\n              {errorDetails}\n            </div>\n          </CardContent>\n        )}\n        <CardFooter className=\"flex justify-end gap-2\">\n          <Button variant=\"outline\" onClick={() => window.location.reload()}>\n            Reload Page\n          </Button>\n          <Button\n            onClick={() => (window.location.href = isLoggedIn ? \"/home\" : \"/\")}\n          >\n            Go to {isLoggedIn ? \"Home\" : \"Landing\"}\n          </Button>\n        </CardFooter>\n      </Card> */}\n    </div>\n  );\n}\n",
+      "type": "registry:file",
+      "target": "src/common/components/error-boundary/route-error.tsx"
+    },
+    {
+      "path": "planetary/template/vite/src/common/components/theme-provider.tsx",
+      "content": "import { createContext, useContext, useEffect, useState } from \"react\";\n\ntype Theme = \"dark\" | \"light\" | \"system\";\n\ntype ThemeProviderProps = {\n\tchildren: React.ReactNode;\n\tdefaultTheme?: Theme;\n\tstorageKey?: string;\n};\n\ntype ThemeProviderState = {\n\ttheme: Theme;\n\tsetTheme: (theme: Theme) => void;\n};\n\nconst initialState: ThemeProviderState = {\n\ttheme: \"dark\",\n\tsetTheme: () => null,\n};\n\nconst ThemeProviderContext = createContext<ThemeProviderState>(initialState);\n\nexport function ThemeProvider({\n\tchildren,\n\tdefaultTheme = \"dark\",\n\tstorageKey = \"vite-ui-theme\",\n\t...props\n}: ThemeProviderProps) {\n\tconst [theme, setTheme] = useState<Theme>(\n\t\t() => (localStorage.getItem(storageKey) as Theme) || defaultTheme\n\t);\n\n\tuseEffect(() => {\n\t\tconst root = window.document.documentElement;\n\n\t\troot.classList.remove(\"light\", \"dark\");\n\n\t\tif (theme === \"system\") {\n\t\t\tconst systemTheme = window.matchMedia(\"(prefers-color-scheme: dark)\")\n\t\t\t\t.matches\n\t\t\t\t? \"dark\"\n\t\t\t\t: \"light\";\n\n\t\t\troot.classList.add(systemTheme);\n\t\t\treturn;\n\t\t}\n\n\t\troot.classList.add(theme);\n\t}, [theme]);\n\n\tconst value = {\n\t\ttheme,\n\t\tsetTheme: (theme: Theme) => {\n\t\t\tlocalStorage.setItem(storageKey, theme);\n\t\t\tsetTheme(theme);\n\t\t},\n\t};\n\n\treturn (\n\t\t<ThemeProviderContext.Provider {...props} value={value}>\n\t\t\t{children}\n\t\t</ThemeProviderContext.Provider>\n\t);\n}\n\nexport const useTheme = () => {\n\tconst context = useContext(ThemeProviderContext);\n\n\tif (context === undefined)\n\t\tthrow new Error(\"useTheme must be used within a ThemeProvider\");\n\n\treturn context;\n};\n",
+      "type": "registry:file",
+      "target": "src/common/components/theme-provider.tsx"
+    },
+    {
+      "path": "planetary/template/vite/src/common/components/theme-toggle.tsx",
+      "content": "// import { Moon, Sun } from \"lucide-react\";\n\n// import { Button } from \"@/common/components/ui/button\";\n// import {\n// \tDropdownMenu,\n// \tDropdownMenuContent,\n// \tDropdownMenuItem,\n// \tDropdownMenuTrigger,\n// } from \"@/common/components/ui/dropdown-menu\";\n// import { useTheme } from \"@/common/components/theme-provider\";\n\nexport function ThemeToggle() {\n\t// const { setTheme } = useTheme();\n\n\t// return (\n\t// \t<DropdownMenu>\n\t// \t\t<DropdownMenuTrigger asChild>\n\t// \t\t\t<Button variant=\"outline\" size=\"icon\">\n\t// \t\t\t\t<Sun className=\"h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0\" />\n\t// \t\t\t\t<Moon className=\"absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100\" />\n\t// \t\t\t\t<span className=\"sr-only\">Toggle theme</span>\n\t// \t\t\t</Button>\n\t// \t\t</DropdownMenuTrigger>\n\t// \t\t<DropdownMenuContent align=\"end\">\n\t// \t\t\t<DropdownMenuItem onClick={() => setTheme(\"light\")}>\n\t// \t\t\t\tLight\n\t// \t\t\t</DropdownMenuItem>\n\t// \t\t\t<DropdownMenuItem onClick={() => setTheme(\"dark\")}>\n\t// \t\t\t\tDark\n\t// \t\t\t</DropdownMenuItem>\n\t// \t\t\t<DropdownMenuItem onClick={() => setTheme(\"system\")}>\n\t// \t\t\t\tSystem\n\t// \t\t\t</DropdownMenuItem>\n\t// \t\t</DropdownMenuContent>\n\t// \t</DropdownMenu>\n\t// );\n\treturn null;\n}\n",
+      "type": "registry:file",
+      "target": "src/common/components/theme-toggle.tsx"
+    },
+    {
+      "path": "planetary/template/vite/src/common/layouts/auth-layout.tsx",
+      "content": "type AuthLayoutProps = {\n  children: React.ReactNode;\n};\n\n// Implement here any sidebar, auth validations, and other guards logic\nfunction AuthLayout({ children }: AuthLayoutProps) {\n  return (\n    <div className=\"flex flex-col min-h-[calc(100vh-64px)] w-full max-w-5xl mx-auto z-10\">\n      <main className=\"flex-1 w-full\">\n        <div className=\"container mx-auto md:gap-8 h-full p-4 sm:px-6 md:pt-8 pb-24 md:pb-4\">\n          {children}\n        </div>\n      </main>\n    </div>\n  );\n}\n\nexport default AuthLayout;\n",
+      "type": "registry:file",
+      "target": "src/common/layouts/auth-layout.tsx"
+    },
+    {
+      "path": "planetary/template/vite/src/common/layouts/layout.tsx",
+      "content": "// Layout for non-auth routes -> Landing, sign up, etc\nfunction Layout({ children }: { children: React.ReactNode }) {\n  return (\n    <div className=\"relative flex flex-col h-screen w-full\">\n      <main className=\"relative z-10 flex flex-col px-4 justify-center md:justify-start items-center text-center min-h-[100dvh-3.5rem] h-[100dvh] overflow-y-auto md:max-w-7xl md:mx-auto\">\n        {children}\n      </main>\n    </div>\n  );\n}\n\nexport default Layout;\n",
+      "type": "registry:file",
+      "target": "src/common/layouts/layout.tsx"
+    },
+    {
+      "path": "planetary/template/vite/src/common/lib/utils.ts",
+      "content": "import { clsx, type ClassValue } from \"clsx\";\nimport { twMerge } from \"tailwind-merge\";\n\nexport function cn(...inputs: ClassValue[]) {\n\treturn twMerge(clsx(inputs));\n}\n\nexport function urlB64ToUint8Array(base64String: string): Uint8Array {\n\tconst padding = \"=\".repeat((4 - (base64String.length % 4)) % 4);\n\tconst base64 = (base64String + padding)\n\t\t.replace(/\\-/g, \"+\")\n\t\t.replace(/_/g, \"/\");\n\tconst rawData = window.atob(base64);\n\tconst outputArray = new Uint8Array(rawData.length);\n\tfor (let i = 0; i < rawData.length; ++i) {\n\t\toutputArray[i] = rawData.charCodeAt(i);\n\t}\n\treturn outputArray;\n}\n",
+      "type": "registry:file",
+      "target": "src/common/lib/utils.ts"
+    },
+    {
+      "path": "planetary/template/vite/src/common/lib/services/query.interceptor.ts",
+      "content": "// Update with the correct HTTP library based on project requirements\n\n// /* eslint-disable @typescript-eslint/no-explicit-any */\n// import { backUrl } from \"@/environment\";\n// import { Routes } from \"@/common/types/routes\";\n// import { fetchBaseQuery } from \"@reduxjs/toolkit/query\";\n\n// export async function interceptor(args: any, api: any, extraOptions: any) {\n// \tconst token = localStorage.getItem(\"token\") || \"\";\n// \ttry {\n// \t\tconst result = await fetchBaseQuery({\n// \t\t\tbaseUrl: `${backUrl}/`,\n// \t\t\tprepareHeaders: (headers: any) => {\n// \t\t\t\theaders.set(\"authorization\", `Bearer ${token}`);\n// \t\t\t\treturn headers;\n// \t\t\t},\n// \t\t})(args, api, extraOptions);\n\n// \t\tif (\n// \t\t\tresult.error &&\n// \t\t\t(result.error.status === 401 || result.error.status === 403)\n// \t\t) {\n// \t\t\tlocalStorage.removeItem(\"token\");\n// \t\t\twindow.location.href = Routes.Signup;\n// \t\t}\n\n// \t\treturn result;\n// \t} catch (error) {\n// \t\treturn api.rejectWithValue(error);\n// \t}\n// }\n",
+      "type": "registry:file",
+      "target": "src/common/lib/services/query.interceptor.ts"
+    },
+    {
+      "path": "planetary/template/vite/src/common/types/routes.ts",
+      "content": "export enum Routes {\n  Landing = \"/\",\n  Dashboard = \"/dashboard\",\n  Home = \"/home\",\n  \n  /*\n   * Generals\n   */\n  NotFound = \"/404\",\n}\n",
+      "type": "registry:file",
+      "target": "src/common/types/routes.ts"
+    },
+    {
+      "path": "planetary/template/vite/src/common/utils/api-error.ts",
+      "content": "/**\n * Defines the structure for common API error responses.\n */\nexport interface ApiErrorData {\n\tsuccess: boolean;\n\tmessage: string;\n\terror: string;\n\tstatusCode: number;\n}\n\nexport interface ApiError {\n\tstatus: number;\n\tdata: ApiErrorData;\n}\n\n/**\n * Type guard to check if an error object matches the expected ApiError structure.\n * This is useful for safely accessing nested properties like `error.data.message`\n * in RTK Query error handlers.\n *\n * @param error - The error object to check (typically of type `unknown` from a catch block).\n * @returns True if the error matches the ApiError structure, false otherwise.\n */\nexport const isApiError = (error: unknown): error is ApiError => {\n\treturn (\n\t\ttypeof error === \"object\" &&\n\t\terror !== null &&\n\t\t\"status\" in error &&\n\t\ttypeof error.status === \"number\" &&\n\t\t\"data\" in error &&\n\t\ttypeof error.data === \"object\" &&\n\t\terror.data !== null &&\n\t\t\"message\" in error.data &&\n\t\ttypeof error.data.message === \"string\"\n\t);\n};\n",
+      "type": "registry:file",
+      "target": "src/common/utils/api-error.ts"
+    },
+    {
+      "path": "planetary/template/vite/src/common/utils/constants.ts",
+      "content": "export const QUEST_IDS = {\n  USER_SIGNUP: \"user-signup\",\n} as const;\n",
+      "type": "registry:file",
+      "target": "src/common/utils/constants.ts"
+    },
+    {
+      "path": "planetary/template/vite/src/common/utils/date.ts",
+      "content": "export const formatDate = (date: Date | null): string => {\n\tif (!date) return \"\";\n\n\t// Ensure date is a Date object if it's a string\n\tconst dateObj = typeof date === \"string\" ? new Date(date) : date;\n\n\tif (isNaN(dateObj.getTime())) {\n\t\t// Handle invalid date string\n\t\treturn \"\";\n\t}\n\n\tconst timeOptions: Intl.DateTimeFormatOptions = {\n\t\thour: \"2-digit\",\n\t\thour12: true,\n\t\ttimeZone: \"America/New_York\",\n\t};\n\n\tif (dateObj.getMinutes() !== 0) {\n\t\ttimeOptions.minute = \"2-digit\";\n\t}\n\n\tconst timeString = dateObj.toLocaleTimeString(\"en-US\", timeOptions);\n\n\treturn `SAT ${dateObj\n\t\t.toLocaleString(\"default\", { month: \"short\", timeZone: \"America/New_York\" })\n\t\t.toUpperCase()} ${dateObj.getDate()} • ${timeString} ET`;\n};\n",
+      "type": "registry:file",
+      "target": "src/common/utils/date.ts"
+    },
+    {
+      "path": "planetary/template/vite/src/common/utils/debounce.ts",
+      "content": "export function debounce<T extends (...args: any[]) => void>(\n  fn: T,\n  delay: number\n): T & { cancel: () => void } {\n  let timeoutId: NodeJS.Timeout;\n\n  const debounced = function (this: unknown, ...args: Parameters<T>) {\n    clearTimeout(timeoutId);\n    timeoutId = setTimeout(() => {\n      fn.apply(this, args);\n    }, delay);\n  } as T & { cancel: () => void };\n\n  debounced.cancel = () => {\n    clearTimeout(timeoutId);\n  };\n\n  return debounced;\n}\n",
+      "type": "registry:file",
+      "target": "src/common/utils/debounce.ts"
+    },
+    {
+      "path": "planetary/template/vite/src/common/utils/logger.ts",
+      "content": "// import { PostHog } from \"posthog-node\";\nimport { envVars } from \"./environment\";\n\nexport enum LogLevel {\n  DEBUG = \"debug\",\n  INFO = \"info\",\n  WARN = \"warn\",\n  ERROR = \"error\",\n}\n\n// ANSI color codes for terminal output\nconst colors = {\n  reset: \"\\x1b[0m\",\n  bright: \"\\x1b[1m\",\n  dim: \"\\x1b[2m\",\n  red: \"\\x1b[31m\",\n  green: \"\\x1b[32m\",\n  yellow: \"\\x1b[33m\",\n  blue: \"\\x1b[34m\",\n  magenta: \"\\x1b[35m\",\n  cyan: \"\\x1b[36m\",\n  white: \"\\x1b[37m\",\n  gray: \"\\x1b[90m\",\n};\n\n// Color mapping for log levels\nconst levelColors = {\n  [LogLevel.DEBUG]: colors.gray,\n  [LogLevel.INFO]: colors.blue,\n  [LogLevel.WARN]: colors.yellow,\n  [LogLevel.ERROR]: colors.red,\n};\n\ntype LogData = Record<string, any>;\n\n// Initialize PostHog client\n// let posthogClient: PostHog | null = null;\n\n// if (env.POSTHOG_API_KEY) {\n//   posthogClient = new PostHog(env.POSTHOG_API_KEY, {\n//     host: env.POSTHOG_HOST,\n//     flushAt: 1, // Send events immediately in development\n//     flushInterval: 1000, // Flush every second\n//   });\n\n//   // Graceful shutdown\n//   process.on(\"SIGINT\", async () => {\n//     if (posthogClient) {\n//       await posthogClient.shutdown();\n//     }\n//   });\n\n//   process.on(\"SIGTERM\", async () => {\n//     if (posthogClient) {\n//       await posthogClient.shutdown();\n//     }\n//   });\n// }\n\nclass Logger {\n  private formatForConsole(\n    level: LogLevel,\n    message: string,\n    data?: LogData\n  ): string {\n    const timestamp = new Date().toISOString();\n    const color = levelColors[level];\n    const levelText = level.toUpperCase().padEnd(5);\n\n    // Only add colors if we're in a TTY (terminal) environment\n    const isColorSupported =\n      process.stdout.isTTY && envVars.NODE_ENV !== \"production\";\n\n    if (isColorSupported) {\n      const coloredLevel = `${color}${colors.bright}${levelText}${colors.reset}`;\n      const coloredTimestamp = `${colors.gray}${timestamp}${colors.reset}`;\n      let formattedMessage = `${coloredTimestamp} ${coloredLevel} ${message}`;\n\n      if (data && Object.keys(data).length > 0) {\n        const dataString = JSON.stringify(data, null, 2);\n        formattedMessage += `\\n${colors.dim}${dataString}${colors.reset}`;\n      }\n\n      return formattedMessage;\n    } else {\n      // Fallback to plain text for production or non-TTY environments\n      let formattedMessage = `${timestamp} ${levelText} ${message}`;\n      if (data && Object.keys(data).length > 0) {\n        formattedMessage += `\\n${JSON.stringify(data, null, 2)}`;\n      }\n      return formattedMessage;\n    }\n  }\n\n  private log(level: LogLevel, message: string, data?: LogData) {\n    const timestamp = new Date().toISOString();\n    const logObject = {\n      level,\n      timestamp,\n      message,\n      ...data,\n    };\n\n    // Output colored logs to the console for development\n    if (envVars.NODE_ENV === \"development\") {\n      console.log(this.formatForConsole(level, message, data));\n    }\n\n    // Send logs to PostHog for analytics and monitoring\n    // if (posthogClient) {\n    //   try {\n    //     // Determine distinct ID from context\n    //     const distinctId =\n    //       data?.userId?.toString() ||\n    //       data?.telegramChatId?.toString() ||\n    //       data?.alertId?.toString() ||\n    //       \"my-app\";\n\n    //     // Create event name based on log level and context\n    //     const eventName = this.createEventName(level, message, data);\n\n    //     posthogClient.capture({\n    //       distinctId,\n    //       event: eventName,\n    //       properties: {\n    //         ...logObject,\n    //         // Add system context\n    //         environment: env.NODE_ENV || \"development\",\n    //         service: \"my-app\",\n    //         hostname: env.HOSTNAME || \"unknown\",\n    //         version: env.npm_package_version || \"1.0.0\",\n    //       },\n    //     });\n    //   } catch (error) {\n    //     // Don't let PostHog errors break the application\n    //     console.error(\"Failed to send log to PostHog:\", error);\n    //   }\n    // }\n  }\n\n  private createEventName(\n    level: LogLevel,\n    message: string,\n    data?: LogData\n  ): string {\n    // Create meaningful event names for different log types\n    if (data?.alertId) return `Alert ${level}: ${message}`;\n    if (data?.userId) return `User ${level}: ${message}`;\n    // and so on\n\n    // Fallback to generic system event\n    return `System ${level}: ${message}`;\n  }\n\n  public debug(message: string, data?: LogData) {\n    // You might want to log debug messages only in development\n    if (envVars.NODE_ENV !== \"production\") {\n      this.log(LogLevel.DEBUG, message, data);\n    }\n  }\n\n  public info(message: string, data?: LogData) {\n    this.log(LogLevel.INFO, message, data);\n  }\n\n  public warn(message: string, data?: LogData) {\n    this.log(LogLevel.WARN, message, data);\n  }\n\n  public error(message: string, error: Error, data?: LogData) {\n    this.log(LogLevel.ERROR, message, {\n      ...data,\n      error: {\n        message: error.message,\n        stack: error.stack,\n      },\n    });\n  }\n}\n\nexport const logger = new Logger();\n",
+      "type": "registry:file",
+      "target": "src/common/utils/logger.ts"
+    },
+    {
+      "path": "planetary/template/vite/src/common/utils/wallet.ts",
+      "content": "import { logger } from \"./logger\";\n\n/**\n * Parses wallet address by extracting the actual address part\n * @param walletAddress - The full wallet address (e.g., \"0x123...\")\n * @returns The address with first 4 and last 4 characters\n */\nexport const parseWalletAddress = (walletAddress: string): string => {\n  try {\n    return `${walletAddress.slice(0, 4)}...${walletAddress.slice(-4)}`;\n  } catch (err) {\n    if (err instanceof Error) {\n      logger.error(\"Failed to parse wallet address\", err);\n    } else {\n      logger.error(\"Failed to parse wallet address\", new Error(String(err)));\n    }\n    return walletAddress;\n  }\n};\n",
+      "type": "registry:file",
+      "target": "src/common/utils/wallet.ts"
+    },
+    {
+      "path": "planetary/template/vite/src/common/hooks/use-mobile.tsx",
+      "content": "import * as React from \"react\"\n\nconst MOBILE_BREAKPOINT = 768\n\nexport function useIsMobile() {\n  const [isMobile, setIsMobile] = React.useState<boolean | undefined>(undefined)\n\n  React.useEffect(() => {\n    const mql = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT - 1}px)`)\n    const onChange = () => {\n      setIsMobile(window.innerWidth < MOBILE_BREAKPOINT)\n    }\n    mql.addEventListener(\"change\", onChange)\n    setIsMobile(window.innerWidth < MOBILE_BREAKPOINT)\n    return () => mql.removeEventListener(\"change\", onChange)\n  }, [])\n\n  return !!isMobile\n}\n",
+      "type": "registry:hook",
+      "target": "src/common/hooks/use-mobile.tsx"
+    },
+    {
+      "path": "planetary/template/vite/src/common/views/not-found.tsx",
+      "content": "import React from \"react\";\nimport { JSX } from \"react/jsx-runtime\";\n// import AuthLayout from \"../components/auth-layout\";\n// import Layout from \"@/modules/login/layout\";\nimport { NavLink } from \"react-router-dom\";\nimport { Routes } from \"../types/routes\";\n\n// mock\nconst getUser = () => {\n  return {\n    id: \"1\",\n    email: \"test@test.com\",\n    username: \"test\",\n    token: \"1234567890\",\n  };\n};\n\nconst NotFound: React.FC = () => {\n  const isAuthenticated = getUser().email !== \"\" && getUser().token !== \"\";\n\n  const renderLayout = (children: JSX.Element) => {\n    return isAuthenticated ? (\n      <>\n        {/* <AuthLayout> */}\n        {children}\n        {/* </AuthLayout> */}\n      </>\n    ) : (\n      <>\n        {/* <Layout> */}\n        {children}\n        {/* </Layout> */}\n      </>\n    );\n  };\n\n  return renderLayout(\n    <div className=\"flex flex-col w-full h-full gap-y-4 md:gap-y-12 justify-start items-center text-center md:items-start md:text-left\">\n      <div className=\"flex flex-col md:flex-row md:w-full gap-x-8 md:items-start md:justify-between gap-4\">\n        <div className=\"flex flex-col gap-4\">\n          <div className=\"flex w-full items-center relative md:justify-start justify-center\">\n            <NavLink\n              to={isAuthenticated ? Routes.Dashboard : Routes.Landing}\n              className=\"absolute left-0 md:static md:mr-4\"\n            />\n            <p className=\"text-2xl uppercase\">Oops</p>\n          </div>\n\n          <p className=\"font-bold text-lg\">\n            The page you are looking for doesn't exist.\n          </p>\n        </div>\n      </div>\n    </div>\n  );\n};\n\nexport default NotFound;\n",
+      "type": "registry:component",
+      "target": "src/common/views/not-found.tsx"
+    },
+    {
+      "path": "planetary/template/vite/src/modules/home/router.tsx",
+      "content": "import { RouteObject } from \"react-router-dom\";\nimport { Routes } from \"../../common/types/routes\";\nimport HomeView from \"./views/home\";\n\nconst homeRoutes: RouteObject[] = [\n  {\n    path: Routes.Home,\n    element: (\n      <div>\n        {/* <AuthLayout> */}\n        <HomeView />\n      </div>\n    ),\n  },\n];\n\nexport default homeRoutes;\n",
+      "type": "registry:file",
+      "target": "src/modules/home/router.tsx"
+    },
+    {
+      "path": "planetary/template/vite/src/modules/home/views/home.tsx",
+      "content": "function HomeView() {\n  return (\n    <div>\n      <h1>Home</h1>\n    </div>\n  );\n}\n\nexport default HomeView;\n",
+      "type": "registry:component",
+      "target": "src/modules/home/views/home.tsx"
+    }
+  ]
+}

@@ -1,5 +1,5 @@
 import { isRouteErrorResponse, useRouteError } from "react-router-dom";
-import { env } from "../../../environment";
+import { envVars } from "../../utils/environment";
 
 // mock
 const getUser = () => {
@@ -16,7 +16,8 @@ export default function RouteError() {
   const user = getUser();
   const isLoggedIn = user.email !== "" && user.token !== "";
   const isDevelopment =
-    env.NODE_ENV === "development" || window.location.hostname === "localhost";
+    envVars.NODE_ENV === "development" ||
+    window.location.hostname === "localhost";
 
   // Extract error message
   let errorMessage = "An unexpected error occurred";
