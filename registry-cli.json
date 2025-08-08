@@ -32,9 +32,7 @@
       "title": "Posthog analytics",
       "description": "Posthog analytics",
       "author": "Jona630 https://github.com/Jona630",
-      "dependencies": [
-        "posthog-js"
-      ],
+      "dependencies": ["posthog-js"],
       "registryDependencies": [],
       "files": [
         {
@@ -50,9 +48,7 @@
       "title": "Zustand",
       "description": "Zustand",
       "author": "Jona630 https://github.com/Jona630",
-      "dependencies": [
-        "zustand"
-      ],
+      "dependencies": ["zustand"],
       "registryDependencies": [],
       "files": [
         {
@@ -78,9 +74,7 @@
       "title": "Environment Configuration",
       "description": "Set up env vars using zod",
       "author": "Jona630 https://github.com/Jona630",
-      "dependencies": [
-        "zod"
-      ],
+      "dependencies": ["zod"],
       "registryDependencies": [],
       "files": [
         {
@@ -119,11 +113,11 @@
       "author": "Jona630 https://github.com/Jona630",
       "dependencies": [],
       "registryDependencies": [
-        "https://registry.tatulino.com/r/vite-template-docs.json",
-        "https://registry.tatulino.com/r/posthog.json",
-        "https://registry.tatulino.com/r/zustand.json",
-        "https://registry.tatulino.com/r/environment.json",
-        "https://registry.tatulino.com/r/logger.json"
+        "https://spaceuy.github.io/react-registry/r/vite-template-docs.json",
+        "https://spaceuy.github.io/react-registry/r/posthog.json",
+        "https://spaceuy.github.io/react-registry/r/zustand.json",
+        "https://spaceuy.github.io/react-registry/r/environment.json",
+        "https://spaceuy.github.io/react-registry/r/logger.json"
       ],
       "files": [
         {

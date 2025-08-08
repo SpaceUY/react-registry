@@ -4,8 +4,8 @@ const path = require("path");
 // Constants that can be reused
 const CONSTANTS = {
   REGISTRY_NAME: "tatulino",
-  HOMEPAGE: "https://registry.tatulino.com",
-  REGISTRY_URL: "https://registry.tatulino.com/r",
+  HOMEPAGE: "https://spaceuy.github.io/react-registry",
+  REGISTRY_URL: "https://spaceuy.github.io/react-registry/r",
   TEMPLATE_BASE_PATH: "planetary/template/vite",
   STATE_MANAGEMENT_PATH: "planetary/state-management",
   AUTHOR: "Jona630 https://github.com/Jona630",

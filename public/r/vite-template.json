@@ -7,11 +7,11 @@
   "description": "A template for a Vite project.",
   "dependencies": [],
   "registryDependencies": [
-    "https://registry.tatulino.com/r/vite-template-docs.json",
-    "https://registry.tatulino.com/r/posthog.json",
-    "https://registry.tatulino.com/r/zustand.json",
-    "https://registry.tatulino.com/r/environment.json",
-    "https://registry.tatulino.com/r/logger.json"
+    "https://spaceuy.github.io/react-registry/r/vite-template-docs.json",
+    "https://spaceuy.github.io/react-registry/r/posthog.json",
+    "https://spaceuy.github.io/react-registry/r/zustand.json",
+    "https://spaceuy.github.io/react-registry/r/environment.json",
+    "https://spaceuy.github.io/react-registry/r/logger.json"
   ],
   "files": [
     {
