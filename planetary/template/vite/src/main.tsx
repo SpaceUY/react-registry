@@ -1,7 +1,7 @@
 import { PostHogProvider } from "posthog-js/react";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { envVars } from "./environment";
+import { envVars } from "./common/utils/environment";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>

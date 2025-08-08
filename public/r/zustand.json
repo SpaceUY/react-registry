@@ -1,0 +1,32 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "zustand",
+  "type": "registry:block",
+  "title": "Zustand",
+  "author": "Jona630 https://github.com/Jona630",
+  "description": "Zustand",
+  "dependencies": [
+    "zustand"
+  ],
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "planetary/template/vite/src/common/store/use-store.ts",
+      "content": "import { create } from \"zustand\";\n\ninterface AppState {\n  isLoading: boolean;\n  setIsLoading: (loading: boolean) => void;\n}\n\nexport const useStore = create<AppState>((set) => ({\n  isLoading: false,\n  setIsLoading: (loading) => set({ isLoading: loading }),\n}));\n",
+      "type": "registry:hook",
+      "target": "src/common/stores/use-store.ts"
+    },
+    {
+      "path": "planetary/template/vite/src/common/store/use-persist-store.ts",
+      "content": "import { create } from \"zustand\";\nimport { createJSONStorage, persist } from \"zustand/middleware\";\n\ninterface ChatStore {\n  messages: string[];\n  addMessage: (message: string) => void;\n  clearMessages: () => void;\n}\n\nexport const useChatStore = create<ChatStore>()(\n  persist(\n    (set) => ({\n      messages: [],\n      addMessage: (message: string) => {\n        set((state) => ({ messages: [...state.messages, message] }));\n      },\n      \n      clearMessages: () => {\n        set({ messages: [] });\n      },\n    }),\n    {\n      name: \"chat-storage\",\n      storage: createJSONStorage(() => localStorage),\n    }\n  )\n);\n",
+      "type": "registry:hook",
+      "target": "src/common/stores/use-persist-store.ts"
+    },
+    {
+      "path": "planetary/template/vite/src/common/store/README.md",
+      "content": "Zustand, Redux or other state management libraries",
+      "type": "registry:file",
+      "target": "docs/zustand/README.md"
+    }
+  ]
+}
