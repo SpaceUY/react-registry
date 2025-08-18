@@ -350,7 +350,7 @@
       "dependencies": ["@tanstack/react-query", "@tanstack/react-virtual", "react"],
       "files": [
         {
-          "path": "registry/new-york/blocks/use-virtualized-infinite-scroll/use-virtualized-infinite-scroll.ts",
+          "path": "registry/new-york/blocks/virtualized-infinite-scroll/page.tsx",
           "type": "registry:hook"
         }
       ]
