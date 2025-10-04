@@ -29,6 +29,11 @@ const COMPONENTS = [
     name: "reactbits.dev",
     url: "https://reactbits.dev/",
   },
+  {
+    type: "components",
+    name: "animate-ui.com",
+    url: "https://animate-ui.com",
+  },
 ];
 
 const REFERENCES = [
