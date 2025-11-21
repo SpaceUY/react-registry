@@ -4,6 +4,7 @@ import FeedbackComponentCSS from "@/components/animations/button/feedback/feedba
 import SmoothButton from "@/components/animations/button/moving-label/moving-label";
 import CardZoom from "@/components/animations/card/card-zoom/card-zoom";
 import MultiStepComponent from "@/components/animations/card/steps/steps";
+import Orbit from "@/components/animations/coin/coin-flip";
 import { TrashAnimation } from "@/components/animations/fun/trash/components/trash-animation";
 import ItemsPopup from "@/components/animations/list/items-popup/items-popup";
 import { ExampleSection } from "@/components/example-section";
@@ -47,8 +48,15 @@ export default function AnimationsPage() {
           <MultiStepComponent />
         </ExampleSection>
 
-        <ExampleSection title="Trash animation with animation" name="trash-animation">
+        <ExampleSection
+          title="Trash animation with animation"
+          name="trash-animation"
+        >
           <TrashAnimation />
+        </ExampleSection>
+
+        <ExampleSection title="Coin flip with animation" name="coin-flip">
+          <Orbit />
         </ExampleSection>
       </main>
     </div>
