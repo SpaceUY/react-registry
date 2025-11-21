@@ -9,7 +9,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/registry/new-york/ui/dialog";
-import { ClipboardCopy, Home, Palette } from "lucide-react";
+import { ClipboardCopy, Home, Palette, Sparkles } from "lucide-react";
 import { McpIcon } from "./icons/link-icon";
 import { ModeToggle } from "./theme-mode-toggle";
 import { envVars } from "@/utils/environment";
@@ -71,7 +71,17 @@ export function Header() {
           >
             <Link href="/" className="flex items-center gap-2">
               <Home className="h-4 w-4" />
-              Home
+              Components
+            </Link>
+          </Button>
+          <Button
+            asChild
+            variant={pathname === "/animations" ? "default" : "ghost"}
+            size="sm"
+          >
+            <Link href="/animations" className="flex items-center gap-2">
+              <Sparkles className="h-4 w-4" />
+              Animations
             </Link>
           </Button>
           <Button
