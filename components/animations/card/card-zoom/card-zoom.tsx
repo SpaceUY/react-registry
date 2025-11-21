@@ -1,11 +1,18 @@
 "use client";
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { useState, useEffect, useRef } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { useOnClickOutside } from "usehooks-ts";
 import "./styles.css";
 
-function Card({ card, setActiveCard }: { card: any; setActiveCard: (card: any) => void }) {
+function Card({
+  card,
+  setActiveCard,
+}: {
+  card: any;
+  setActiveCard: (card: any) => void;
+}) {
   return (
     <motion.div
       layoutId={`card-${card.title}`}
@@ -112,9 +119,17 @@ function Card({ card, setActiveCard }: { card: any; setActiveCard: (card: any) =
   );
 }
 
-function ActiveCard({ activeCard, setActiveCard }: { activeCard: any; setActiveCard: (card: any) => void }) {
+function ActiveCard({
+  activeCard,
+  setActiveCard,
+}: {
+  activeCard: any;
+  setActiveCard: (card: any) => void;
+}) {
   const ref = useRef<HTMLDivElement>(null);
-  useOnClickOutside(ref as React.RefObject<HTMLElement>, () => setActiveCard(null));
+  useOnClickOutside(ref as React.RefObject<HTMLElement>, () =>
+    setActiveCard(null)
+  );
 
   return (
     <motion.div
