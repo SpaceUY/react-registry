@@ -6,6 +6,16 @@ const ICONS = [
     name: "pqoqubbw",
     url: "https://icons.pqoqubbw.dev/",
   },
+  {
+    type: "icons",
+    name: "Tabler",
+    url: "https://tabler.io/icons",
+  },
+  {
+    type: "icons",
+    name: "Phosphor",
+    url: "https://phosphoricons.com/",
+  },
 ];
 
 const COMPONENTS = [
@@ -60,6 +70,29 @@ const SAAS_TEMPLATES = [
   },
 ];
 
+const SERVICES = [
+  {
+    type: "services",
+    name: "PostHog",
+    url: "https://posthog.com/",
+  },
+  {
+    type: "services",
+    name: "Sentry",
+    url: "https://sentry.io/",
+  },
+  {
+    type: "services",
+    name: "Plausible",
+    url: "https://plausible.io/",
+  },
+  {
+    type: "services",
+    name: "Google Analytics",
+    url: "https://analytics.google.com/",
+  },
+];
+
 interface ResourceItem {
   type: string;
   name: string;
@@ -103,6 +136,12 @@ const CATEGORIES: CategorySection[] = [
     description: "Ready-to-use SaaS application templates",
     items: SAAS_TEMPLATES,
     icon: "🚀",
+  },
+  {
+    title: "Services",
+    description: "Analytics, monitoring, and error tracking services",
+    items: SERVICES,
+    icon: "📊",
   },
 ];
 
