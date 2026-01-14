@@ -342,6 +342,18 @@
           "target": "src/modules/home/views/home.tsx"
         }
       ]
+    },
+    {
+      "name": "virtualized-infinite-scroll",
+      "type": "registry:complex-component",
+      "description": "A hook that combines TanStack Query's infinite queries with TanStack Virtual for efficient virtualized infinite scrolling. Implemented with shadcn table to show how it works.",
+      "dependencies": ["@tanstack/react-query", "@tanstack/react-virtual", "react"],
+      "files": [
+        {
+          "path": "registry/new-york/blocks/virtualized-infinite-scroll/page.tsx",
+          "type": "registry:hook"
+        }
+      ]
     }
   ]
 }
